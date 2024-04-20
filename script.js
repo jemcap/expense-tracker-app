@@ -28,10 +28,39 @@ const addTransactionsDOM = (transaction) => {
   list.appendChild(item);
 };
 
+// Update total balance, income and expense
+const updateExpensesDOM = () => {
+  // get total amount
+  const amount = transactions.map((transaction) => transaction.amount);
+  // add up total
+  const total = amount.reduce((acc, item) => (acc += item), 0).toFixed(2);
+  // filter only income
+  const income = amount
+    .filter((item) => item > 0)
+    .reduce((acc, item) => (acc += item), 0)
+    .toFixed(2);
+  // filter only expenses
+  const expenses = amount
+    .filter((item) => item < 0)
+    .reduce((acc, item) => (acc += item), 0)
+    .toFixed(2);
+
+  //   render balance
+  balance.textContent =
+    total < 0 ? `-£${Math.abs(total).toFixed(2)}` : `£${total}`;
+  moneyPlus.textContent = `+£${Math.abs(income).toFixed(2)}`;
+  moneyMinus.textContent = `-£${Math.abs(expenses).toFixed(2)}`;
+
+  // apply class based on balance
+  balance.classList.toggle("minus", Math.sign(total) === -1);
+  balance.classList.toggle("plus", Math.sign(total) === 1);
+};
+
 // Initialise app
 const initApp = () => {
   item.innerHTML = "";
   transactions.forEach(addTransactionsDOM);
+  updateExpensesDOM();
 };
 
 initApp();
