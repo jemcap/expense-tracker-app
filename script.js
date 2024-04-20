@@ -5,6 +5,8 @@ const list = document.getElementById("list");
 const form = document.getElementById("form");
 const text = document.getElementById("text");
 const amount = document.getElementById("amount");
+const budgetForm = document.getElementById("form-budget");
+const budgetInput = document.getElementById("budget");
 
 const localStorageTransactions = JSON.parse(
   localStorage.getItem("transactions")
@@ -71,6 +73,7 @@ const addTransaction = (e) => {
     addTransactionsDOM(transaction);
     updateExpensesDOM();
     updateLocalStorage();
+    checkExpensesAgainstBudget();
     text.value = "";
     amount.value = "";
   }
@@ -100,6 +103,49 @@ const initApp = () => {
   updateExpensesDOM();
 };
 
-initApp();
+// Function to set the weekly budget
+const setWeeklyBudget = (budget) => {
+  localStorage.setItem("weeklyBudget", budget);
+};
+
+// Function to get the weekly budget from localStorage
+const getWeeklyBudget = () => {
+  const budget = localStorage.getItem("weeklyBudget");
+  return budget ? parseFloat(budget) : 0;
+};
+
+// Function to check if expenses exceed the weekly budget and display alert if necessary
+const checkExpensesAgainstBudget = () => {
+  const weeklyBudget = getWeeklyBudget();
+
+  // Calculate total expenses
+  const totalExpenses = transactions
+    .filter((transaction) => transaction.amount < 0)
+    .reduce((total, transaction) => total + transaction.amount, 0);
+
+  // Compare total expenses with weekly budget
+  if (Math.abs(totalExpenses) > weeklyBudget) {
+    alert("Expenses have exceeded the weekly budget!");
+  }
+};
+
+// Event listener to handle budget submission
+budgetForm.addEventListener("submit", function (e) {
+  e.preventDefault(); // Prevent default form submission behavior
+
+  const budget = parseFloat(budgetInput.value);
+
+  // Set the weekly budget and store it in localStorage
+  setWeeklyBudget(budget);
+
+  // Clear the budget input field
+  budgetInput.value = "";
+
+  // Display confirmation message
+  alert("Weekly budget has been set successfully!");
+});
 
 form.addEventListener("submit", addTransaction);
+
+// Initialize the app
+initApp();
