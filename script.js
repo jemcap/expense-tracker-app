@@ -6,14 +6,9 @@ const form = document.getElementById("form");
 const text = document.getElementById("text");
 const amount = document.getElementById("amount");
 
-const exampleTransactions = [
-  { id: 1, item: "Book", amount: -20 },
-  { id: 2, item: "Dividends", amount: 250 },
-  { id: 3, item: "Candle", amount: -8.5 },
-  { id: 4, item: "Camera", amount: -450 },
-];
+const transactionsArr = [];
 
-let transactions = exampleTransactions;
+let transactions = transactionsArr;
 
 // Add transaction to DOM
 const addTransactionsDOM = (transaction) => {
