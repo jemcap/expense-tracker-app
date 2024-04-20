@@ -8,9 +8,9 @@ const amount = document.getElementById("amount");
 
 const exampleTransactions = [
   { id: 1, item: "Book", amount: -20 },
-  { id: 1, item: "Dividends", amount: 250 },
-  { id: 1, item: "Candle", amount: -8.5 },
-  { id: 1, item: "Camera", amount: -450 },
+  { id: 2, item: "Dividends", amount: 250 },
+  { id: 3, item: "Candle", amount: -8.5 },
+  { id: 4, item: "Camera", amount: -450 },
 ];
 
 let transactions = exampleTransactions;
@@ -24,7 +24,9 @@ const addTransactionsDOM = (transaction) => {
   item.classList.add(transaction.amount < 0 ? "minus" : "plus");
   item.innerHTML = `${transaction.item} <span>${sign}${Math.abs(
     transaction.amount
-  ).toFixed(2)}</span><button class="delete-btn">x</button>`;
+  ).toFixed(2)}</span><button class="delete-btn" onclick="removeTransaction(${
+    transaction.id
+  })">x</button>`;
   list.appendChild(item);
 };
 
@@ -56,11 +58,43 @@ const updateExpensesDOM = () => {
   balance.classList.toggle("plus", Math.sign(total) === 1);
 };
 
+const addTransaction = (e) => {
+  e.preventDefault();
+  if (text.value.trim() === "" || amount.value.trim() === "") {
+    alert("Please input a value");
+  } else {
+    const transaction = {
+      id: genRandID(),
+      item: text.value,
+      amount: +amount.value,
+    };
+    console.log(transaction);
+    transactions.push(transaction);
+    addTransactionsDOM(transaction);
+    updateExpensesDOM();
+    text.value = "";
+    amount.value = "";
+  }
+};
+
+// Generate random ID
+const genRandID = () => {
+  return Math.floor(Math.random() * 100000000);
+};
+
+// remove transaction by ID
+const removeTransaction = (id) => {
+  transactions = transactions.filter((transaction) => transaction.id !== id);
+  initApp();
+};
+
 // Initialise app
 const initApp = () => {
-  item.innerHTML = "";
+  list.innerHTML = "";
   transactions.forEach(addTransactionsDOM);
   updateExpensesDOM();
 };
 
 initApp();
+
+form.addEventListener("submit", addTransaction);

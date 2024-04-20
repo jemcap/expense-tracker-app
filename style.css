@@ -22,7 +22,10 @@ body {
 
 .container {
   margin: 30px auto;
-  width: 350px;
+  width: 500px;
+  background-color: #666678;
+  padding: 50px;
+  border-radius: 50px;
 }
 
 h1 {
