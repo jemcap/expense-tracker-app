@@ -123,7 +123,7 @@ input[type="number"] {
   border-right: 5px solid #c0392b;
 }
 
-.delete-submit-btn {
+.delete-btn {
   background-color: #e74c3c;
   border: 0;
   color: #fff;
@@ -139,11 +139,11 @@ input[type="number"] {
   cursor: pointer;
 }
 
-.list li:hover .delete-submit-btn {
+.list li:hover .delete-btn {
   opacity: 1;
 }
 
 .submit-btn:focus,
-.delete-submit-btn:focus {
+.delete-btn:focus {
   outline: 0;
 }
