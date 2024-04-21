@@ -7,6 +7,41 @@ const text = document.getElementById("text");
 const amount = document.getElementById("amount");
 const budgetForm = document.getElementById("form-budget");
 const budgetInput = document.getElementById("budget");
+const weekNum = document.getElementById("week-number");
+const setBudgetContainer = document.getElementById("set-budget");
+const trackerContainer = document.getElementById("tracker-container");
+
+trackerContainer.hidden = true;
+
+// Returns the ISO week of the date.
+Date.prototype.getWeek = function () {
+  var date = new Date(this.getTime());
+  date.setHours(0, 0, 0, 0);
+  // Thursday in current week decides the year.
+  date.setDate(date.getDate() + 3 - ((date.getDay() + 6) % 7));
+  // January 4 is always in week 1.
+  var week1 = new Date(date.getFullYear(), 0, 4);
+  // Adjust to Thursday in week 1 and count number of weeks from date to week1.
+  return (
+    1 +
+    Math.round(
+      ((date.getTime() - week1.getTime()) / 86400000 -
+        3 +
+        ((week1.getDay() + 6) % 7)) /
+        7
+    )
+  );
+};
+
+const date = new Date();
+weekNum.textContent = date.getWeek();
+
+// Returns the four-digit year corresponding to the ISO week of the date.
+Date.prototype.getWeekYear = function () {
+  var date = new Date(this.getTime());
+  date.setDate(date.getDate() + 3 - ((date.getDay() + 6) % 7));
+  return date.getFullYear();
+};
 
 const localStorageTransactions = JSON.parse(
   localStorage.getItem("transactions")
@@ -132,17 +167,15 @@ const checkExpensesAgainstBudget = () => {
 // Event listener to handle budget submission
 budgetForm.addEventListener("submit", function (e) {
   e.preventDefault(); // Prevent default form submission behavior
-
   const budget = parseFloat(budgetInput.value);
-
   // Set the weekly budget and store it in localStorage
   setWeeklyBudget(budget);
-
   // Clear the budget input field
   budgetInput.value = "";
-
   // Display confirmation message
   alert("Weekly budget has been set successfully!");
+  setBudgetContainer.remove();
+  trackerContainer.hidden = false;
 });
 
 form.addEventListener("submit", addTransaction);
