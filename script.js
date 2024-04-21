@@ -182,3 +182,5 @@ form.addEventListener("submit", addTransaction);
 
 // Initialize the app
 initApp();
+
+//To-do: keep the statement modal persisting throughout the week (7days), once the week is over, clear localStorage display the budget set modal and hide the statement tracker
