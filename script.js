@@ -11,7 +11,63 @@ const weekNum = document.getElementById("week-number");
 const setBudgetContainer = document.getElementById("set-budget");
 const trackerContainer = document.getElementById("tracker-container");
 
-trackerContainer.hidden = true;
+// Function to check if the stored budget is expired
+const isBudgetExpired = () => {
+  const storedDate = localStorage.getItem("budgetSetDate");
+  if (!storedDate) return true; // If no date is stored, consider it expired
+  const setWeek = new Date(storedDate).getWeek();
+  const currentWeek = new Date().getWeek();
+  return setWeek !== currentWeek; // Check if stored week is different from current week
+};
+
+// Function to set the weekly budget and store the current date
+const setWeeklyBudget = (budget) => {
+  localStorage.setItem("weeklyBudget", budget);
+  localStorage.setItem("budgetSetDate", new Date().toISOString());
+};
+
+// Function to get the weekly budget from localStorage
+const getWeeklyBudget = () => {
+  // Check if stored budget is expired, if yes, reset budget and date
+  if (isBudgetExpired()) {
+    localStorage.removeItem("weeklyBudget");
+    localStorage.removeItem("budgetSetDate");
+    return 0; // Return 0 as budget is expired
+  }
+  const budget = localStorage.getItem("weeklyBudget");
+  return budget ? parseFloat(budget) : 0;
+};
+
+// Function to check if expenses exceed the weekly budget and display alert if necessary
+const checkExpensesAgainstBudget = () => {
+  const weeklyBudget = getWeeklyBudget();
+
+  // Calculate total expenses
+  const totalExpenses = transactions
+    .filter((transaction) => transaction.amount < 0)
+    .reduce((total, transaction) => total + transaction.amount, 0);
+
+  // Compare total expenses with weekly budget
+  if (Math.abs(totalExpenses) > weeklyBudget) {
+    alert("Expenses have exceeded the weekly budget!");
+  }
+};
+
+// Event listener to handle budget submission
+budgetForm.addEventListener("submit", function (e) {
+  e.preventDefault(); // Prevent default form submission behavior
+  const budget = parseFloat(budgetInput.value);
+  // Set the weekly budget and store it in localStorage
+  setWeeklyBudget(budget);
+  // Clear the budget input field
+  budgetInput.value = "";
+  // Hide the setBudgetContainer
+  setBudgetContainer.hidden = true;
+  // Show the trackerContainer
+  trackerContainer.hidden = false;
+  // Display confirmation message
+  alert("Weekly budget has been set successfully!");
+});
 
 // Returns the ISO week of the date.
 Date.prototype.getWeek = function () {
@@ -136,51 +192,16 @@ const initApp = () => {
   list.innerHTML = "";
   transactions.forEach(addTransactionsDOM);
   updateExpensesDOM();
-};
-
-// Function to set the weekly budget
-const setWeeklyBudget = (budget) => {
-  localStorage.setItem("weeklyBudget", budget);
-};
-
-// Function to get the weekly budget from localStorage
-const getWeeklyBudget = () => {
-  const budget = localStorage.getItem("weeklyBudget");
-  return budget ? parseFloat(budget) : 0;
-};
-
-// Function to check if expenses exceed the weekly budget and display alert if necessary
-const checkExpensesAgainstBudget = () => {
-  const weeklyBudget = getWeeklyBudget();
-
-  // Calculate total expenses
-  const totalExpenses = transactions
-    .filter((transaction) => transaction.amount < 0)
-    .reduce((total, transaction) => total + transaction.amount, 0);
-
-  // Compare total expenses with weekly budget
-  if (Math.abs(totalExpenses) > weeklyBudget) {
-    alert("Expenses have exceeded the weekly budget!");
+  if (getWeeklyBudget() > 0) {
+    trackerContainer.hidden = false;
+    setBudgetContainer.hidden = true;
+  } else {
+    trackerContainer.hidden = true;
+    setBudgetContainer.hidden = false;
   }
 };
-
-// Event listener to handle budget submission
-budgetForm.addEventListener("submit", function (e) {
-  e.preventDefault(); // Prevent default form submission behavior
-  const budget = parseFloat(budgetInput.value);
-  // Set the weekly budget and store it in localStorage
-  setWeeklyBudget(budget);
-  // Clear the budget input field
-  budgetInput.value = "";
-  // Display confirmation message
-  alert("Weekly budget has been set successfully!");
-  setBudgetContainer.remove();
-  trackerContainer.hidden = false;
-});
 
 form.addEventListener("submit", addTransaction);
 
 // Initialize the app
 initApp();
-
-//To-do: keep the statement modal persisting throughout the week (7days), once the week is over, clear localStorage display the budget set modal and hide the statement tracker
