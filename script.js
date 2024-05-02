@@ -10,6 +10,9 @@ const budgetInput = document.getElementById("budget");
 const weekNum = document.getElementById("week-number");
 const setBudgetContainer = document.getElementById("set-budget");
 const trackerContainer = document.getElementById("tracker-container");
+const budgetValue = document.getElementById("buget-value");
+const trackBudget = document.getElementById("track-budget");
+const overBudgetAlert = document.getElementById("over-budget-alert");
 
 // Function to check if the stored budget is expired
 const isBudgetExpired = () => {
@@ -121,6 +124,32 @@ const addTransactionsDOM = (transaction) => {
   list.appendChild(item);
 };
 
+const alertOverBudget = () => {
+  const budget = parseFloat(localStorage.getItem("weeklyBudget"));
+  const amount = transactions.map((transaction) => transaction.amount);
+  const total = amount.reduce((acc, item) => acc + item, 0);
+
+  // Calculate the difference between total expenses and the weekly budget
+  const difference = total - budget;
+  console.log(difference);
+
+  // Check if total expenses exceed the budget
+  if (difference < 0) {
+    const budgetAlert = document.createElement("small");
+    budgetAlert.innerHTML = `You're over your weekly budget by <span>£${Math.abs(
+      difference.toFixed(2)
+    )}</span>`;
+    budgetAlert.classList.add("alert");
+    trackBudget.appendChild(budgetAlert);
+  } else {
+    // If total expenses are within the budget, remove any existing alert
+    const existingAlert = document.querySelector("#track-budget h2");
+    if (existingAlert) {
+      existingAlert.remove();
+    }
+  }
+};
+
 // Update total balance, income and expense
 const updateExpensesDOM = () => {
   // get total amount
@@ -147,6 +176,9 @@ const updateExpensesDOM = () => {
   // apply class based on balance
   balance.classList.toggle("minus", Math.sign(total) === -1);
   balance.classList.toggle("plus", Math.sign(total) === 1);
+
+  const budget = localStorage.getItem("weeklyBudget");
+  budgetValue.textContent = `£${budget}`;
 };
 
 const addTransaction = (e) => {
@@ -199,6 +231,7 @@ const initApp = () => {
     trackerContainer.hidden = true;
     setBudgetContainer.hidden = false;
   }
+  alertOverBudget();
 };
 
 form.addEventListener("submit", addTransaction);

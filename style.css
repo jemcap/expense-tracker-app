@@ -26,6 +26,8 @@ body {
   background-color: #666678;
   padding: 50px;
   border-radius: 50px;
+  box-shadow: rgba(136, 165, 191, 0.48) 6px 2px 16px 0px,
+    rgba(255, 255, 255, 0.8) -6px -2px 16px 0px;
 }
 
 h1 {
@@ -152,4 +154,15 @@ select[name="category"] {
 .submit-btn:focus,
 .delete-btn:focus {
   outline: 0;
+}
+
+#track-budget {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+#track-budget > h4 {
+  font-size: 1.2em;
 }
