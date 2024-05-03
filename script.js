@@ -5,6 +5,7 @@ const list = document.getElementById("list");
 const form = document.getElementById("form");
 const text = document.getElementById("text");
 const amount = document.getElementById("amount");
+const category = document.getElementById("category");
 const budgetForm = document.getElementById("form-budget");
 const budgetInput = document.getElementById("budget");
 const weekNum = document.getElementById("week-number");
@@ -13,6 +14,9 @@ const trackerContainer = document.getElementById("tracker-container");
 const budgetValue = document.getElementById("buget-value");
 const trackBudget = document.getElementById("track-budget");
 const overBudgetAlert = document.getElementById("over-budget-alert");
+const expensesSheet = document.getElementById("expenses-sheet");
+
+let categoryData = [];
 
 // Function to check if the stored budget is expired
 const isBudgetExpired = () => {
@@ -111,9 +115,13 @@ let transactions =
 
 // Add transaction to DOM
 const addTransactionsDOM = (transaction) => {
+  // Clear the expensesSheet before rendering
+  expensesSheet.innerHTML = "";
+
   // Get sign whether it is minus or plus
   const sign = transaction.amount < 0 ? "-" : "+";
-  //   Create list items dynamically
+
+  // Create list item for the transaction
   const item = document.createElement("li");
   item.classList.add(transaction.amount < 0 ? "minus" : "plus");
   item.innerHTML = `${transaction.item} <span>${sign}${Math.abs(
@@ -121,20 +129,40 @@ const addTransactionsDOM = (transaction) => {
   ).toFixed(2)}</span><button class="delete-btn" onclick="removeTransaction(${
     transaction.id
   })">x</button>`;
+  item.classList.add("list-item");
   list.appendChild(item);
+
+  // Loop through each category and render it along with its total amount
+  categoryData.forEach((category) => {
+    const categoryItem = document.createElement("li");
+    categoryItem.innerHTML = `${category.category}: £${Math.abs(
+      transaction.amount
+    ).toFixed(2)}`;
+    expensesSheet.appendChild(categoryItem);
+    console.log(category);
+  });
 };
 
 const alertOverBudget = () => {
-  const budget = parseFloat(localStorage.getItem("weeklyBudget"));
-  const amount = transactions.map((transaction) => transaction.amount);
-  const total = amount.reduce((acc, item) => acc + item, 0);
+  // Calculate the difference between expenses and the weekly budget
 
-  // Calculate the difference between total expenses and the weekly budget
-  const difference = total - budget;
+  const weeklyBudget = getWeeklyBudget();
+
+  console.log(weeklyBudget);
+
+  // Calculate total expenses
+  const totalExpenses = transactions
+    .filter((transaction) => transaction.amount < 0)
+    .reduce((total, transaction) => total + transaction.amount, 0);
+
+  console.log(totalExpenses);
+
+  const difference = totalExpenses + weeklyBudget;
+
   console.log(difference);
 
-  // Check if total expenses exceed the budget
-  if (difference < 0) {
+  // Compare total expenses with weekly budget
+  if (Math.abs(totalExpenses) > weeklyBudget) {
     const budgetAlert = document.createElement("small");
     budgetAlert.innerHTML = `You're over your weekly budget by <span>£${Math.abs(
       difference.toFixed(2)
@@ -190,7 +218,9 @@ const addTransaction = (e) => {
       id: genRandID(),
       item: text.value,
       amount: +amount.value,
+      category: category.value,
     };
+    addData(transaction);
     console.log(transaction);
     transactions.push(transaction);
     addTransactionsDOM(transaction);
@@ -201,6 +231,11 @@ const addTransaction = (e) => {
     amount.value = "";
   }
 };
+
+function addData(obj) {
+  categoryData.push(obj);
+  updateExpensesDOM();
+}
 
 // Generate random ID
 const genRandID = () => {

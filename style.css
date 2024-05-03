@@ -28,6 +28,19 @@ body {
   border-radius: 50px;
   box-shadow: rgba(136, 165, 191, 0.48) 6px 2px 16px 0px,
     rgba(255, 255, 255, 0.8) -6px -2px 16px 0px;
+  flex: 1;
+  margin-right: 50px; /* Add margin for spacing between container and aside */
+}
+
+#tracker-container {
+  display: flex;
+}
+
+aside {
+  margin: 30px auto;
+  padding: 50px;
+  width: 500px;
+  border-left: 2px solid black;
 }
 
 h1 {
