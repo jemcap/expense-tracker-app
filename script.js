@@ -115,8 +115,30 @@ let transactions =
 
 // Add transaction to DOM
 const addTransactionsDOM = (transaction) => {
+  // Initialize an object to store total expenses for each category
+  const categoryExpenses = {};
+
+  // Iterate over each transaction to update total expenses for each category
+  transactions.forEach((transaction) => {
+    const category = transaction.category;
+    if (categoryExpenses.hasOwnProperty(category)) {
+      categoryExpenses[category] += transaction.amount;
+    } else {
+      categoryExpenses[category] = transaction.amount;
+    }
+  });
+
   // Clear the expensesSheet before rendering
   expensesSheet.innerHTML = "";
+
+  // Render each category along with its total expenses
+  for (const category in categoryExpenses) {
+    const categoryItem = document.createElement("li");
+    categoryItem.innerHTML = `${category}: £${Math.abs(
+      categoryExpenses[category]
+    ).toFixed(2)}`;
+    expensesSheet.appendChild(categoryItem);
+  }
 
   // Get sign whether it is minus or plus
   const sign = transaction.amount < 0 ? "-" : "+";
@@ -131,16 +153,6 @@ const addTransactionsDOM = (transaction) => {
   })">x</button>`;
   item.classList.add("list-item");
   list.appendChild(item);
-
-  // Loop through each category and render it along with its total amount
-  categoryData.forEach((category) => {
-    const categoryItem = document.createElement("li");
-    categoryItem.innerHTML = `${category.category}: £${Math.abs(
-      transaction.amount
-    ).toFixed(2)}`;
-    expensesSheet.appendChild(categoryItem);
-    console.log(category);
-  });
 };
 
 const alertOverBudget = () => {
@@ -227,6 +239,7 @@ const addTransaction = (e) => {
     updateExpensesDOM();
     updateLocalStorage();
     checkExpensesAgainstBudget();
+    alertOverBudget();
     text.value = "";
     amount.value = "";
   }
