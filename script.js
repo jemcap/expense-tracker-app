@@ -39,6 +39,7 @@ const getWeeklyBudget = () => {
   if (isBudgetExpired()) {
     localStorage.removeItem("weeklyBudget");
     localStorage.removeItem("budgetSetDate");
+    localStorage.removeItem("transactions");
     return 0; // Return 0 as budget is expired
   }
   const budget = localStorage.getItem("weeklyBudget");
