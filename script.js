@@ -72,7 +72,7 @@ budgetForm.addEventListener("submit", function (e) {
   // Hide the setBudgetContainer
   setBudgetContainer.hidden = true;
   // Show the trackerContainer
-  trackerContainer.hidden = false;
+  trackerContainer.style.display = "flex";
   // Display confirmation message
   alert("Weekly budget has been set successfully!");
 });
@@ -116,7 +116,7 @@ let transactions =
 
 // Add transaction to DOM
 const addTransactionsDOM = (transaction) => {
-  // Initialize an object to store total expenses for each category
+  // Initialise an object to store total expenses for each category
   const categoryExpenses = {};
 
   // Iterate over each transaction to update total expenses for each category
@@ -273,11 +273,12 @@ const initApp = () => {
   list.innerHTML = "";
   transactions.forEach(addTransactionsDOM);
   updateExpensesDOM();
-  if (getWeeklyBudget() > 0) {
-    trackerContainer.hidden = false;
+
+  if (getWeeklyBudget()) {
+    trackerContainer.style.display = "flex";
     setBudgetContainer.hidden = true;
   } else {
-    trackerContainer.hidden = true;
+    trackerContainer.style.display = "none";
     setBudgetContainer.hidden = false;
   }
   alertOverBudget();
