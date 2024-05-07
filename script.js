@@ -135,9 +135,10 @@ const addTransactionsDOM = (transaction) => {
   // Render each category along with its total expenses
   for (const category in categoryExpenses) {
     const categoryItem = document.createElement("li");
-    categoryItem.innerHTML = `${category}: £${Math.abs(
+    categoryItem.classList.add("category-list");
+    categoryItem.innerHTML = `${category}: <span id="category-list__item">£${Math.abs(
       categoryExpenses[category]
-    ).toFixed(2)}`;
+    ).toFixed(2)}</span>`;
     expensesSheet.appendChild(categoryItem);
   }
 
