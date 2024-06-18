@@ -1,20 +1,29 @@
 @import url("https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Open+Sans:ital,wght@0,300;1,300&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap");
 
 :root {
-  --box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0.24);
-  --container_box-shadow: rgba(136, 165, 191, 0.48) 6px 2px 16px 0px,
-    rgba(255, 255, 255, 0.8) -6px -2px 16px 0px;
-  --expense: #c0392b;
+  --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  --container-box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+  --primary-color: #4caf50;
+  --secondary-color: #9c88ff;
+  --danger-color: #e74c3c;
+  --background-color: #f5f7fa;
+  --container-background: #ffffff;
+  --heading-color: #333;
+  --text-color: #666;
+  --primary-font: "Roboto", sans-serif;
+  --secondary-font: "Lato", sans-serif;
 }
 
 * {
   box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
 body {
-  font-family: "Roboto", sans-serif;
-  color: #f7f7f7;
-  background-color: #60607c;
+  font-family: var(--primary-font);
+  color: var(--text-color);
+  background-color: var(--background-color);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -26,12 +35,11 @@ body {
 .container {
   margin: 30px auto;
   width: 500px;
-  background-color: #666678;
+  background-color: var(--container-background);
   padding: 50px;
-  border-radius: 50px;
-  box-shadow: var(--container_box-shadow);
-  flex: 1;
-  margin-right: 50px; /* Add margin for spacing between container and aside */
+  border-radius: 25px;
+  box-shadow: var(--container-box-shadow);
+  text-align: center;
 }
 
 #tracker-container {
@@ -43,43 +51,49 @@ body {
   font-size: 1.1em;
   padding: 20px 10px;
   margin: 25px 0;
-  border-radius: 20px;
-  background-color: #666678;
-  box-shadow: var(--container_box-shadow);
+  border-radius: 10px;
+  background-color: var(--container-background);
+  box-shadow: var(--container-box-shadow);
 }
-#category-list__item {
-  color: var(--expense);
+
+.category-list__item {
+  color: var(--primary-color);
 }
 
 aside {
   margin: 30px auto;
   padding: 50px;
   width: 500px;
-  border-left: 2px solid black;
+  border-left: 2px solid #ddd;
 }
 
 h1 {
   letter-spacing: 1px;
   margin: 0;
+  color: var(--heading-color);
 }
+
 h3 {
   border-bottom: 1px solid #bbb;
   padding-bottom: 10px;
   margin: 40px 0 10px;
+  color: var(--heading-color);
 }
 
 h4 {
   margin: 0;
   text-transform: uppercase;
+  color: var(--heading-color);
 }
 
 .inc-exp-container {
-  background-color: #808096;
+  background-color: var(--container-background);
   box-shadow: var(--box-shadow);
   padding: 20px;
   display: flex;
   justify-content: space-between;
   margin: 20px 0;
+  border-radius: 10px;
 }
 
 .inc-exp-container > div {
@@ -99,40 +113,56 @@ h4 {
 
 .money.plus,
 .plus {
-  color: #2ecc71;
+  color: var(--primary-color);
 }
 
 .money.minus,
 .minus {
-  color: #c0392b;
+  color: var(--danger-color);
 }
 
 label {
   display: inline-block;
   margin: 10px 0;
+  color: var(--text-color);
 }
 
 input[type="text"],
 input[type="number"],
 select[name="category"] {
   border: 1px solid #dedede;
-  border-radius: 2px;
+  border-radius: 4px;
   display: block;
   font-size: 16px;
   padding: 10px;
   width: 100%;
+  margin: 10px 0;
 }
 
+button,
 .submit-btn {
-  background-color: #9c88ff;
-  box-shadow: var(--box-shadow);
+  background-color: var(--secondary-color);
   color: #fff;
-  display: block;
+  display: inline-block;
   font-size: 16px;
-  margin: 10px 0 30px;
-  padding: 10px;
-  width: 100%;
+  margin: 10px 0;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 25px;
   cursor: pointer;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+button:hover,
+.submit-btn:hover {
+  background-color: darken(var(--secondary-color), 10%);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+button a,
+.submit-btn a {
+  color: #fff;
+  text-decoration: none;
 }
 
 .list {
@@ -150,17 +180,19 @@ select[name="category"] {
   position: relative;
   padding: 10px;
   margin: 10px;
+  border-radius: 5px;
 }
 
 .list li.plus {
-  border-right: 5px solid #2ecc71;
+  border-right: 5px solid var(--primary-color);
 }
+
 .list li.minus {
-  border-right: 5px solid #c0392b;
+  border-right: 5px solid var(--danger-color);
 }
 
 .delete-btn {
-  background-color: #e74c3c;
+  background-color: var(--danger-color);
   border: 0;
   color: #fff;
   font-size: 20px;
@@ -171,7 +203,7 @@ select[name="category"] {
   left: 0;
   transform: translate(-100%, -50%);
   opacity: 0;
-  transition: 0.2s ease-in;
+  transition: opacity 0.2s ease-in;
   cursor: pointer;
 }
 
@@ -181,7 +213,7 @@ select[name="category"] {
 
 .submit-btn:focus,
 .delete-btn:focus {
-  outline: 0;
+  outline: none;
 }
 
 #track-budget {
