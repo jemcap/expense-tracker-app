@@ -15,6 +15,7 @@ const budgetValue = document.getElementById("buget-value");
 const trackBudget = document.getElementById("track-budget");
 const overBudgetAlert = document.getElementById("over-budget-alert");
 const expensesSheet = document.getElementById("expenses-sheet");
+const remainingSpending = document.getElementById("budget-remaining-spending");
 
 let categoryData = [];
 
@@ -114,9 +115,8 @@ const localStorageTransactions = JSON.parse(
 let transactions =
   localStorage.getItem("transactions") !== null ? localStorageTransactions : [];
 
-// Add transaction to DOM
 const addTransactionsDOM = (transaction) => {
-  // Initialise an object to store total expenses for each category
+  // Initialize an object to store total expenses for each category
   const categoryExpenses = {};
 
   // Iterate over each transaction to update total expenses for each category
@@ -158,22 +158,23 @@ const addTransactionsDOM = (transaction) => {
 };
 
 const alertOverBudget = () => {
-  // Calculate the difference between expenses and the weekly budget
-
   const weeklyBudget = getWeeklyBudget();
-
-  console.log(weeklyBudget);
 
   // Calculate total expenses
   const totalExpenses = transactions
     .filter((transaction) => transaction.amount < 0)
     .reduce((total, transaction) => total + transaction.amount, 0);
 
-  console.log(totalExpenses);
+  const difference = weeklyBudget + totalExpenses;
 
-  const difference = totalExpenses + weeklyBudget;
+  console.log("Weekly Budget:", weeklyBudget);
+  console.log("Total Expenses:", Math.abs(totalExpenses));
 
-  console.log(difference);
+  // Clear any existing alert message before adding a new one
+  const existingAlert = document.querySelector("#track-budget small");
+  if (existingAlert) {
+    existingAlert.remove();
+  }
 
   // Compare total expenses with weekly budget
   if (Math.abs(totalExpenses) > weeklyBudget) {
@@ -183,12 +184,10 @@ const alertOverBudget = () => {
     )}</span>`;
     budgetAlert.classList.add("alert");
     trackBudget.appendChild(budgetAlert);
+  } else if (Math.abs(totalExpenses) === weeklyBudget) {
+    remainingSpending.innerHTML = "nothing";
   } else {
-    // If total expenses are within the budget, remove any existing alert
-    const existingAlert = document.querySelector("#track-budget h2");
-    if (existingAlert) {
-      existingAlert.remove();
-    }
+    remainingSpending.innerHTML = `£${Math.abs(difference).toFixed(2)}`;
   }
 };
 
@@ -277,9 +276,11 @@ const initApp = () => {
 
   if (getWeeklyBudget()) {
     trackerContainer.style.display = "flex";
+    trackBudget.style.display = "flex";
     setBudgetContainer.hidden = true;
   } else {
     trackerContainer.style.display = "none";
+    trackBudget.style.display = "none";
     setBudgetContainer.hidden = false;
   }
   alertOverBudget();

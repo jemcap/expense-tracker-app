@@ -40,6 +40,7 @@
     <div id="track-budget">
         <h4>This week's budget: <span id="buget-value"></span></h4>
         <!-- Dynamically render the budget alert -->
+        <h5>You have <span id="budget-remaining-spending">nothing</span> left to spend this week.</h5>
     </div>
 
     <section id="tracker-container">
@@ -92,8 +93,11 @@
                 <button class="submit-btn">Add Transaction</button>
             </form>
         </div>
-        <aside id="expenses-sheet">
+        <aside id="tracking-sheet">
             <h4>Expenses tracking sheet</h4>
+            <div id="expenses-sheet">
+
+            </div>
         </aside>
 
     </section>
