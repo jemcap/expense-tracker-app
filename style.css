@@ -85,6 +85,22 @@ h4 {
   text-transform: uppercase;
   color: var(--heading-color);
 }
+.heading h4 {
+  font-size: 1.5em;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.heading img {
+  margin: 20px 0;
+}
+
+.heading p {
+  font-size: 1em;
+  color: #666;
+  margin-bottom: 20px;
+  line-height: 1.4;
+}
 
 .inc-exp-container {
   background-color: var(--container-background);
@@ -155,7 +171,6 @@ button,
 
 button:hover,
 .submit-btn:hover {
-  background-color: darken(var(--secondary-color), 10%);
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
 
